@@ -106,8 +106,94 @@ static Float32 strongestFrequencyHZ(Float32 *buffer, FFTHelperRef *fftHelper, UI
 
 
 __weak UILabel *labelToUpdate = nil;
+__weak UILabel *lettersToUpdate = nil;
 
+NSString* currentLetters = @"";
 
+NSString* convertFrequencyToLetter(Float32 frequency){
+    if (abs(frequency - 18000) < 30){
+        return @"A";
+    }
+    if (abs(frequency - 18075) < 30){
+        return @"B";
+    }
+    if (abs(frequency - 18150) < 30){
+        return @"C";
+    }
+    if (abs(frequency - 18225) < 30){
+        return @"D";
+    }
+    if (abs(frequency - 18300) < 30){
+        return @"E";
+    }
+    if (abs(frequency - 18375) < 30){
+        return @"F";
+    }
+    if (abs(frequency - 18450) < 30){
+        return @"G";
+    }
+    if (abs(frequency - 18525) < 30){
+        return @"H";
+    }
+    if (abs(frequency - 18600) < 30){
+        return @"I";
+    }
+    if (abs(frequency - 18675) < 30){
+        return @"J";
+    }
+    if (abs(frequency - 18750) < 30){
+        return @"K";
+    }
+    if (abs(frequency - 18825) < 30){
+        return @"L";
+    }
+    if (abs(frequency - 18900) < 30){
+        return @"M";
+    }
+    if (abs(frequency - 18975) < 30){
+        return @"N";
+    }
+    if (abs(frequency - 19050) < 30){
+        return @"O";
+    }
+    if (abs(frequency - 19125) < 30){
+        return @"P";
+    }
+    if (abs(frequency - 19200) < 30){
+        return @"Q";
+    }
+    if (abs(frequency - 19275) < 30){
+        return @"R";
+    }
+    if (abs(frequency - 19350) < 30){
+        return @"S";
+    }
+    if (abs(frequency - 19425) < 30){
+        return @"T";
+    }
+    if (abs(frequency - 19500) < 30){
+        return @"U";
+    }
+    if (abs(frequency - 19575) < 30){
+        return @"V";
+    }
+    if (abs(frequency - 19650) < 30){
+        return @"W";
+    }
+    if (abs(frequency - 19725) < 30){
+        return @"X";
+    }
+    if (abs(frequency - 19800) < 30){
+        return @"Y";
+    }
+    if (abs(frequency - 19875) < 30){
+        return @"Z";
+    }
+    if (abs(frequency - 19950) < 30){
+        return @"a";
+    }
+    return @"";
+}
 
 #pragma mark MAIN CALLBACK
 void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
@@ -134,6 +220,22 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
         
         NSLog(@" max HZ = %0.3f ", maxHZ);
         dispatch_async(dispatch_get_main_queue(), ^{ //update UI only on main thread
+            NSString *currentLetter = convertFrequencyToLetter(maxHZ);
+            NSString *toDisplayLetters;
+            if (currentLetter.length == 0){
+                toDisplayLetters = @"--";
+                currentLetters = @"";
+            } else{
+                currentLetters = [currentLetters stringByAppendingString:currentLetter];
+                int lengthDisplay = currentLetters.length;
+                if (lengthDisplay > 2){
+                    currentLetters = [currentLetters substringFromIndex:1];
+                }
+                toDisplayLetters = currentLetters;
+            }
+            
+            
+            lettersToUpdate.text = toDisplayLetters;
             labelToUpdate.text = [NSString stringWithFormat:@"%0.3f HZ",maxHZ];
         });
         
@@ -141,15 +243,6 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     }
     memset(buffer, 0, sizeof(Float32)*frameSize*NUMCHANNELS);
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -163,14 +256,36 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    lettersToUpdate = lettersLabel;
     labelToUpdate = HZValueLabel;
+    frequencyCard.backgroundColor=[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:0.5];
+    [frequencyCard.layer setCornerRadius:5.0f];
+    [frequencyCard.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [frequencyCard.layer setBorderWidth:0.2f];
+    [frequencyCard.layer setShadowColor:[UIColor colorWithRed:225.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0].CGColor];
+    [frequencyCard.layer setShadowOpacity:1.0];
+    [frequencyCard.layer setShadowRadius:5.0];
+    [frequencyCard.layer setShadowOffset:CGSizeMake(5.0f, 5.0f)];
+    
+    categoryCard.backgroundColor=[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:0.5];
+    [categoryCard.layer setCornerRadius:5.0f];
+    [categoryCard.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [categoryCard.layer setBorderWidth:0.2f];
+    [categoryCard.layer setShadowColor:[UIColor colorWithRed:225.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0].CGColor];
+    [categoryCard.layer setShadowOpacity:1.0];
+    [categoryCard.layer setShadowRadius:5.0];
+    [categoryCard.layer setShadowOffset:CGSizeMake(5.0f, 5.0f)];
     
     //initialize stuff
     fftConverter = FFTHelperCreate(accumulatorDataLenght);
     initializeAccumulator();
     [self initMomuAudio];
 
+}
+
+-(void) viewWillAppear:(BOOL)animated {
+    
+    [self.navigationController.navigationBar setValue:@(YES) forKeyPath:@"hidesShadow"];
 }
 
 -(void) initMomuAudio {

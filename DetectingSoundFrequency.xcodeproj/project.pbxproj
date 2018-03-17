@@ -241,7 +241,7 @@
 				ORGANIZATIONNAME = Mac;
 				TargetAttributes = {
 					04808C1518BE868300E685F1 = {
-						DevelopmentTeam = WERFRYPVGS;
+						DevelopmentTeam = C933SUF3G5;
 					};
 					04808C3618BE868300E685F1 = {
 						TestTargetID = 04808C1518BE868300E685F1;
@@ -434,10 +434,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				DEVELOPMENT_TEAM = WERFRYPVGS;
+				DEVELOPMENT_TEAM = C933SUF3G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DetectingSoundFrequency/DetectingSoundFrequency-Prefix.pch";
 				INFOPLIST_FILE = "DetectingSoundFrequency/DetectingSoundFrequency-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "public.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -449,10 +450,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				DEVELOPMENT_TEAM = WERFRYPVGS;
+				DEVELOPMENT_TEAM = C933SUF3G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DetectingSoundFrequency/DetectingSoundFrequency-Prefix.pch";
 				INFOPLIST_FILE = "DetectingSoundFrequency/DetectingSoundFrequency-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "public.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
