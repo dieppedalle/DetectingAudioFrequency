@@ -113,6 +113,7 @@ static Float32 strongestFrequencyHZ(Float32 *buffer, FFTHelperRef *fftHelper, UI
 
 __weak UILabel *labelToUpdate = nil;
 __weak UILabel *lettersToUpdate = nil;
+__weak UILabel *adToUpdate = nil;
 
 NSString* currentLetters = @"";
 NSString* currentAdStr = @"";
@@ -202,22 +203,23 @@ NSString* convertFrequencyToLetter(Float32 frequency){
     return @"";
 }
 
-void convertToAd(){
+NSString* convertToAd(){
     if ([currentLetters isEqualToString:@"AG"]){
-        currentAdStr = @"Use coupon code SUMMERSALE to get a free 🕶 when you buy any pair!";
+        return @"Use coupon code SUMMERSALE to get a free 🕶 when you buy any pair!";
     } else if ([currentLetters isEqualToString:@"AD"]){
-        currentAdStr = @"It's time to upgrade your iPhone 📱!";
+        return @"It's time to upgrade your iPhone 📱!";
     } else if ([currentLetters isEqualToString:@"AJ"]){
-        currentAdStr = @"Come check out our new summer brand of clothes 👕!";
+        return @"Come check out our new summer brand of clothes 👕!";
     } else if ([currentLetters isEqualToString:@"AP"]){
-        currentAdStr = @"Your friend John has played this arcade game last week 🕹!";
+        return @"Your friend John has played this arcade game last week 🕹!";
     } else if ([currentLetters isEqualToString:@"AK"]){
-        currentAdStr = @"Get a free month of delivery if you buy the a box of 6 🍪!";
+        return @"Get a free month of delivery if you buy the a box of 6 🍪!";
     } else if ([currentLetters isEqualToString:@"AU"]){
-        currentAdStr = @"You could win a trip to France if you buy this 🌯!";
+        return @"You could win a trip to France if you buy this 🌯!";
     } else if ([currentLetters isEqualToString:@"AA"]){
-        currentAdStr = @"Thank you for shopping at Safeway! 👋";
-    }    currentAdStr = @"Use coupon code BIGMAC2018 for 20% off your next 🍔!";
+        return @"Thank you for shopping at Safeway! 👋";
+    }
+    return @"Use coupon code BIGMAC2018 for 20% off your next 🍔!";
 }
 
 
@@ -248,6 +250,7 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
         dispatch_async(dispatch_get_main_queue(), ^{ //update UI only on main thread
             NSString *currentLetter = convertFrequencyToLetter(maxHZ);
             NSString *toDisplayLetters;
+            
             if (currentLetter.length == 0){
                 toDisplayLetters = @"--";
                 currentLetters = @"";
@@ -257,9 +260,11 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
                 if (lengthDisplay > 2){
                     currentLetters = [currentLetters substringFromIndex:1];
                 }
+                
                 toDisplayLetters = currentLetters;
-                if (lengthDisplay == 2){
-                    convertToAd();
+                
+                if (toDisplayLetters.length >= 2){
+                    adToUpdate.text = convertToAd();
                 }
             }
             
@@ -286,6 +291,7 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     [super viewDidLoad];
     lettersToUpdate = lettersLabel;
     labelToUpdate = HZValueLabel;
+    adToUpdate = adLabel;
     frequencyCard.backgroundColor=[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:0.5];
     [frequencyCard.layer setCornerRadius:5.0f];
     [frequencyCard.layer setBorderColor:[UIColor lightGrayColor].CGColor];
