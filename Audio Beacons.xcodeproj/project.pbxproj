@@ -29,6 +29,9 @@
 		04808C6918C00D8200E685F1 /* mo_gfx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 04808C6718C00D8200E685F1 /* mo_gfx.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D713E840205DEF4E00B637B5 /* TableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D713E83F205DEF4E00B637B5 /* TableViewController.mm */; };
 		D713E843205E1A0D00B637B5 /* Audio Beacons-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D713E842205E1A0C00B637B5 /* Audio Beacons-Info.plist */; };
+		D7F05E47206925EE00BF7957 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F05E46206925EE00BF7957 /* LocationModel.swift */; };
+		D7F05E492069265F00BF7957 /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F05E482069265F00BF7957 /* HomeModel.swift */; };
+		D7F05E4B20692A3700BF7957 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F05E4A20692A3700BF7957 /* MapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +75,10 @@
 		D713E841205E1A0C00B637B5 /* Audio Beacons-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Audio Beacons-Prefix.pch"; sourceTree = "<group>"; };
 		D713E842205E1A0C00B637B5 /* Audio Beacons-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Audio Beacons-Info.plist"; sourceTree = "<group>"; };
 		D71E9A02205DE2300061AC3E /* TableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		D7F05E45206925EE00BF7957 /* Audio Beacons-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Audio Beacons-Bridging-Header.h"; sourceTree = "<group>"; };
+		D7F05E46206925EE00BF7957 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
+		D7F05E482069265F00BF7957 /* HomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
+		D7F05E4A20692A3700BF7957 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +156,10 @@
 				04808C4F18BE88E800E685F1 /* FFTHelper.mm */,
 				04808C3118BE868300E685F1 /* Images.xcassets */,
 				04808C2018BE868300E685F1 /* Supporting Files */,
+				D7F05E46206925EE00BF7957 /* LocationModel.swift */,
+				D7F05E45206925EE00BF7957 /* Audio Beacons-Bridging-Header.h */,
+				D7F05E482069265F00BF7957 /* HomeModel.swift */,
+				D7F05E4A20692A3700BF7957 /* MapViewController.swift */,
 			);
 			path = DetectingSoundFrequency;
 			sourceTree = "<group>";
@@ -243,6 +254,7 @@
 				TargetAttributes = {
 					04808C1518BE868300E685F1 = {
 						DevelopmentTeam = C933SUF3G5;
+						LastSwiftMigration = 0920;
 					};
 					04808C3618BE868300E685F1 = {
 						DevelopmentTeam = 67QJZLANJR;
@@ -300,7 +312,10 @@
 				04808C2A18BE868300E685F1 /* AppDelegate.mm in Sources */,
 				04808C6818C00D8200E685F1 /* mo_audio.mm in Sources */,
 				04808C2618BE868300E685F1 /* main.mm in Sources */,
+				D7F05E4B20692A3700BF7957 /* MapViewController.swift in Sources */,
+				D7F05E492069265F00BF7957 /* HomeModel.swift in Sources */,
 				04808C6918C00D8200E685F1 /* mo_gfx.mm in Sources */,
+				D7F05E47206925EE00BF7957 /* LocationModel.swift in Sources */,
 				D713E840205DEF4E00B637B5 /* TableViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,13 +452,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = C933SUF3G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DetectingSoundFrequency/Audio Beacons-Prefix.pch";
 				INFOPLIST_FILE = "DetectingSoundFrequency/Audio Beacons-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dieppedalle.audioBeacons;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "DetectingSoundFrequency/Audio Beacons-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -453,13 +473,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = C933SUF3G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DetectingSoundFrequency/Audio Beacons-Prefix.pch";
 				INFOPLIST_FILE = "DetectingSoundFrequency/Audio Beacons-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dieppedalle.audioBeacons;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "DetectingSoundFrequency/Audio Beacons-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -467,6 +491,7 @@
 		04808C4C18BE868300E685F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/DetectingSoundFrequency.app/DetectingSoundFrequency";
 				DEVELOPMENT_TEAM = 67QJZLANJR;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -491,6 +516,7 @@
 		04808C4D18BE868300E685F1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/DetectingSoundFrequency.app/DetectingSoundFrequency";
 				DEVELOPMENT_TEAM = 67QJZLANJR;
 				FRAMEWORK_SEARCH_PATHS = (

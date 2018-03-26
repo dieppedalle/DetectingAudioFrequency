@@ -325,6 +325,8 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     fftConverter = FFTHelperCreate(accumulatorDataLenght);
     initializeAccumulator();
     [self initMomuAudio];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Audio Beacon Found!" message:@"Do you want to add this audio beacon to the crowdsource map?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
+    [alert show];
     
 }
 
