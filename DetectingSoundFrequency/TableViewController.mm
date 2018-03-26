@@ -10,6 +10,7 @@
 
 #import "mo_audio.h" //stuff that helps set up low-level audio
 #import "FFTHelper.h"
+#import <MapKit/MapKit.h>
 
 
 #define SAMPLE_RATE 44100  //22050 //44100
@@ -115,8 +116,12 @@ __weak UILabel *labelToUpdate = nil;
 __weak UILabel *lettersToUpdate = nil;
 __weak UILabel *adToUpdate = nil;
 
+__weak UIBarButtonItem *addMarker = nil;
+
 NSString* currentLetters = @"";
 NSString* currentAdStr = @"";
+Float32 currentFreq = 0.0;
+Float32 clickedFreq = 0.0;
 
 NSString* convertFrequencyToLetter(Float32 frequency){
     if (abs(frequency - 18000) < 30){
@@ -234,6 +239,7 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     
     
     
+    
     if (accumulateFrames(buffer, frameSize)==YES) { //if full
         
         //windowing the time domain data before FFT (using Blackman Window)
@@ -242,10 +248,9 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
         vDSP_vmul(dataAccumulator, 1, windowBuffer, 1, dataAccumulator, 1, accumulatorDataLenght);
         //=========================================
         
-        
         Float32 maxHZValue = 0;
         Float32 maxHZ = strongestFrequencyHZ(dataAccumulator, fftConverter, accumulatorDataLenght, &maxHZValue);
-        
+        currentFreq = maxHZ;
         NSLog(@" max HZ = %0.3f ", maxHZ);
         dispatch_async(dispatch_get_main_queue(), ^{ //update UI only on main thread
             NSString *currentLetter = convertFrequencyToLetter(maxHZ);
@@ -255,6 +260,8 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
                 toDisplayLetters = @"--";
                 currentLetters = @"";
             } else{
+                //addMarker.hidden = NO;
+                
                 currentLetters = [currentLetters stringByAppendingString:currentLetter];
                 int lengthDisplay = currentLetters.length;
                 if (lengthDisplay > 2){
@@ -265,6 +272,8 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
                 
                 if (toDisplayLetters.length >= 2){
                     adToUpdate.text = convertToAd();
+                    
+                    
                 }
             }
             
@@ -280,15 +289,48 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
 
 
 
-@interface TableViewController ()
+@interface TableViewController()<CLLocationManagerDelegate, UITableViewDelegate>{}
++ (void)showAlertView;
 
 @end
 
 @implementation TableViewController
 
+
+
+- (void)showAlertView
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Audio Beacon Found!" message:@"Do you want to add this audio beacon to the crowdsource map?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
+    [alert show];
+}
+
+- (void)showAlertView2
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Audio Beacon Found"
+                                                    message:@"A frequency between 18000Hz and 22000Hz is required to categorize the sound as an audio beacon. Click the button again once you have found an audio beacon and to add it on the crowdsourced map."
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+- (IBAction)clickAddMarker:(id)sender {
+    clickedFreq = currentFreq;
+    
+    if (clickedFreq > 18000){
+        [self showAlertView];
+    } else{
+        [self showAlertView2];
+    }
+}
+
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     lettersToUpdate = lettersLabel;
     labelToUpdate = HZValueLabel;
     adToUpdate = adLabel;
@@ -325,9 +367,56 @@ void AudioCallback( Float32 * buffer, UInt32 frameSize, void * userData )
     fftConverter = FFTHelperCreate(accumulatorDataLenght);
     initializeAccumulator();
     [self initMomuAudio];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Audio Beacon Found!" message:@"Do you want to add this audio beacon to the crowdsource map?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
-    [alert show];
     
+    
+}
+
+
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    // the user clicked OK
+    if (buttonIndex == 0) {
+        CLLocationCoordinate2D coordinate = [self getLocation];
+        NSString *latitude = [NSString stringWithFormat:@"%f", coordinate.latitude];
+        NSString *longitude = [NSString stringWithFormat:@"%f", coordinate.longitude];
+        
+        
+        NSString * funcParam = [NSString stringWithFormat:@"http://audio-beacons.000webhostapp.com/add.php?name=%@&address=%@&latitude=%@&longitude=%@", [NSString stringWithFormat:@"%0.1fHz", currentFreq], @"Test", latitude, longitude];
+        
+        [self getDataFrom: funcParam];
+    }
+}
+
+-(CLLocationCoordinate2D) getLocation{
+    CLLocationManager *locationManager;
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    [locationManager startUpdatingLocation];
+    CLLocation *location = [locationManager location];
+    // Configure the new event with information from the location
+    CLLocationCoordinate2D coordinate = [location coordinate];
+    
+    return coordinate;
+}
+
+- (NSString *) getDataFrom:(NSString *)url{
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setHTTPMethod:@"GET"];
+    [request setURL:[NSURL URLWithString:url]];
+    
+    NSError *error = nil;
+    NSHTTPURLResponse *responseCode = nil;
+    
+    NSData *oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
+    
+    if([responseCode statusCode] != 200){
+        NSLog(@"Error getting %@, HTTP status code %i", url, [responseCode statusCode]);
+        return nil;
+    }
+    
+    return [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
 }
 
 -(void) viewWillAppear:(BOOL)animated {

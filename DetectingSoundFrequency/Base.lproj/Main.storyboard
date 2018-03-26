@@ -124,6 +124,7 @@
                                                         </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <gestureRecognizers/>
                                                     <constraints>
                                                         <constraint firstItem="O82-2I-5hi" firstAttribute="centerX" secondItem="ghd-nM-8Dl" secondAttribute="centerX" id="3yv-VW-vqe"/>
                                                         <constraint firstAttribute="trailing" secondItem="6kr-rg-qbL" secondAttribute="trailing" constant="-12" id="9xm-0L-NpR"/>
@@ -285,11 +286,18 @@
                             <outlet property="delegate" destination="OEL-UT-qyu" id="WLX-pU-yvj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Audio Beacons" id="xPB-Lb-GnI"/>
+                    <navigationItem key="navigationItem" title="Audio Beacons" id="xPB-Lb-GnI">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="marker" id="7QS-IB-vun">
+                            <connections>
+                                <action selector="clickAddMarker:" destination="OEL-UT-qyu" id="KCQ-pD-Zd8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="HZValueLabel" destination="O82-2I-5hi" id="64A-gP-qs4"/>
                         <outlet property="adCard" destination="JAB-06-Oww" id="VgW-6L-IMU"/>
                         <outlet property="adLabel" destination="pvZ-5I-cap" id="n1D-Wt-PuS"/>
+                        <outlet property="addMarker" destination="7QS-IB-vun" id="Bnp-T7-Vwm"/>
                         <outlet property="categoryCard" destination="pnw-Wy-Lgx" id="Owp-o7-5Qs"/>
                         <outlet property="frequencyCard" destination="ghd-nM-8Dl" id="ba0-G4-gpW"/>
                         <outlet property="lettersLabel" destination="Daz-xA-k2F" id="ygi-cr-YFd"/>
@@ -297,11 +305,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PTH-ym-MhF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-513" y="-104"/>
+            <point key="canvasLocation" x="-513.5" y="-104.5"/>
         </scene>
     </scenes>
     <resources>
         <image name="cellular_network" width="30" height="30"/>
         <image name="map_marker" width="30" height="30"/>
+        <image name="marker" width="30" height="30"/>
     </resources>
 </document>

@@ -15,6 +15,8 @@
     IBOutlet UIView *categoryCard;
     IBOutlet UIView *adCard;
     IBOutlet UIView *adLabel;
-    
+    IBOutlet UIBarButtonItem *addMarker;
 }
++ (void)showAlertView;
++ (void)addButtonBar;
 @end
